@@ -5,6 +5,11 @@ from bs4 import BeautifulSoup
 import csv
 
 headers = {"User-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:73.0) Gecko/20100101 Firefox/73.0"}
+'''
+POST: Returns an array of SKUs for the products from the link.
+PRE:  Takes in a string of a link to a Best Buy product listing page. MUST have products on the page.
+This function can be used standalone or used in combination with other scrape functions.
+'''
 def scrapeSKU(link):
     webpage = requests.get(link, headers=headers)
     parse = BeautifulSoup(webpage.content, 'html5lib')
@@ -30,6 +35,11 @@ def scrapeSKU(link):
 
     return cleaned_skus
 
+'''
+POST: Returns an array of names for the products from the link.
+PRE:  Takes in a string of a link to a Best Buy product listing page. MUST have products on the page.
+This function can be used standalone or used in combination with other scrape functions.
+'''
 def scrapeNames(link):
     webpage = requests.get(link, headers=headers)
     parse = BeautifulSoup(webpage.content, 'html5lib')
@@ -37,6 +47,11 @@ def scrapeNames(link):
     sku_name = parse.findAll('h4',attrs={'class':'sku-header'})
     return sku_name
 
+'''
+POST: Returns an array of prices for the products from the link.
+PRE:  Takes in a string of a link to a Best Buy product listing page. MUST have products on the page.
+This function can be used standalone or used in combination with other scrape functions.
+'''
 def scrapePrice(link):
     webpage = requests.get(link, headers=headers)
     parse = BeautifulSoup(webpage.content, 'html5lib')
@@ -58,6 +73,11 @@ def scrapePrice(link):
 
     return cleaned_list
 
+'''
+POST: Returns an array of reviews for the products from the link.
+PRE:  Takes in a string of a link to a Best Buy product listing page. MUST have products on the page.
+This function can be used standalone or used in combination with other scrape functions.
+'''
 def scrapeReviews(link):
     webpage = requests.get(link, headers=headers)
     parse = BeautifulSoup(webpage.content, 'html5lib')
@@ -65,6 +85,11 @@ def scrapeReviews(link):
     sku_rating = sku_list.findAll('p',attrs={'class':'sr-only'})
     return sku_rating
 
+'''
+POST: Returns an array of type SKU_ITEM. Builds the array using all scrape functions.
+PRE:  Takes in a string of a link to a Best Buy product listing page. MUST have products on the page.
+This function is used to build an array of SKU_ITEM to prepare it for storage or for analysis
+'''
 def createAndBuildItemList(link):
     skus = scrapeSKU(link)
     prices = scrapePrice(link)
@@ -78,18 +103,21 @@ def createAndBuildItemList(link):
         counter = counter + 1
     return items
 
-def receivePrint(link,csvFile):
+def writeToCsv(sku_items,csvFile,appendOrNew):
     
-    sku_name = scrapeSKU(link)
-    for row in sku_name:
-        print(row)
-
-    
-    file = open(csvFile,'w')
+    file = open(csvFile,appendOrNew)
     with file:
-        writer = csv.writer(file)
-        for row in sku_name:
-            writer.writerow(row)
+        fieldnames = ['Item Name','SKU','Price','Ratings']
+        writer = csv.DictWriter(file,fieldnames=fieldnames)
+        if(appendOrNew == 'a'):
+            for row in sku_items:
+                writer.writerow({'Item Name': row.returnName(), 'SKU': row.returnSKU(), 'Price': row.returnPrice(),'Ratings': row.returnRating()})
+            print("Printing done. Check the CSV file.")
+            return
+        else:
+            writer.writeheader()
+            for row in sku_items:
+                writer.writerow({'Item Name': row.returnName(), 'SKU': row.returnSKU(), 'Price': row.returnPrice(),'Ratings': row.returnRating()})
 
     print("Printing done. Check the CSV file.")
 

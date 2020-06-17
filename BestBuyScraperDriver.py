@@ -5,8 +5,11 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import csv
 
-URL = 'https://www.bestbuy.com/site/small-appliances/coffee-tea-espresso/pcmcat367400050002.c?id=pcmcat367400050002'
+URL = 'https://www.bestbuy.com/site/refrigerators/french-door-refrigerators/abcat0901004.c?id=abcat0901004'
 items = BestBuyScraperTools.createAndBuildItemList(URL)
 
-for item in items:
-    item.display()
+
+BestBuyScraperTools.writeToCsv(items,'BBscraped.csv','a')
+
+#https://www.bestbuy.com/site/refrigerators/french-door-refrigerators/abcat0901004.c?id=abcat0901004
+#https://www.bestbuy.com/site/refrigerators/french-door-refrigerators/abcat0901004.c?cp=2&id=abcat0901004

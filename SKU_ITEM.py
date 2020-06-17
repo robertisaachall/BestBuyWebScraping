@@ -7,13 +7,13 @@ class SKU_ITEM:
         #self.numReviews = numReviews
 
     def returnName(self):
-        return name
+        return self.name
     def returnSKU(self):
-        return sku
+        return self.sku
     def returnPrice(self):
-        return price
+        return self.price
     def returnRating(self):
-        return rating
+        return self.rating
     
 
     def display(self):
