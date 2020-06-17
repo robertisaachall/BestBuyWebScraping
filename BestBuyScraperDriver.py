@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import csv
 
 URL = 'https://www.bestbuy.com/site/small-appliances/coffee-tea-espresso/pcmcat367400050002.c?id=pcmcat367400050002'
-BestBuyScraperTools.receivePrint(URL,'BBscraped.csv')
+items = BestBuyScraperTools.createAndBuildItemList(URL)
 
- 
+for item in items:
+    item.display()
