@@ -1,15 +1,12 @@
-import requests
 import BestBuyScraperTools
-import SKU_ITEM
-from selenium import webdriver
-from bs4 import BeautifulSoup
-import csv
+from datetime import datetime
 
-URL = 'https://www.bestbuy.com/site/refrigerators/french-door-refrigerators/abcat0901004.c?id=abcat0901004'
+search_term = "hello"
+URL = 'https://www.bestbuy.com/site/searchpage.jsp?st=' + search_term
 items = BestBuyScraperTools.createAndBuildItemList(URL)
 
+current_time = datetime.now()
+current_time = current_time.strftime("%H-%M-%S")
+test_number = "BBScrap_test_" + str(current_time) + ".csv"
 
-BestBuyScraperTools.writeToCsv(items,'BBscraped.csv','a')
-
-#https://www.bestbuy.com/site/refrigerators/french-door-refrigerators/abcat0901004.c?id=abcat0901004
-#https://www.bestbuy.com/site/refrigerators/french-door-refrigerators/abcat0901004.c?cp=2&id=abcat0901004
+BestBuyScraperTools.writeToCsv(items, test_number, 'w')
